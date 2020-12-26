@@ -2,7 +2,7 @@ import React from "react";
 import "./sign-in.styles.scss";
 import FormInput from "../form-input/form-input.component";
 import CustomButton from "../custom-button/custom-button.component"
-import { signInWithGoogle } from "../../firebase/firebase.utils"
+import { auth, signInWithGoogle } from "../../firebase/firebase.utils"
 class SignIn extends React.Component {
   constructor(props) {
     super(props);
@@ -14,9 +14,18 @@ class SignIn extends React.Component {
   }
 
   //when submit button pressed this funtion will invoke
-  handleSubmit = (event) => {
+  handleSubmit = async event => {
     event.preventDefault(); // prevent default submit action
-    this.setState({ email: "", password: "" }); //clear the fields
+
+    const { email, password } = this.state;
+
+    try{
+      await auth.signInWithEmailAndPassword(email, password);
+      this.setState({ email: "", password: "" }); //clear the fields
+    }catch(error){
+      console.log(error);
+    }
+    
   };
 
   // Below function:- take the input name(eg email-nazik@gmail.com and set to target value, same goes to password)
